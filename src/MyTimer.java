@@ -1,20 +1,27 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.security.KeyStore;
 import java.util.TimerTask;
 import java.util.Timer;
 
 
-public class MyTimer
+public class MyTimer implements KeyListener
 {
     public int time;
     private final int PERIOD = 1000;
     private final int DELAY = 0;
-    private TimerViewer f;
-    private KeyListener k;
+    public TimerViewer f;
     private int remainingTime;
+
+    private boolean pause = false;
+    private int playTime = 0;
+
+    private Balloons game;
     public MyTimer()
     {
-        f = new TimerViewer(time, this);
+        game = new Balloons(this);
+        f = new TimerViewer(this, game);
+        f.addKeyListener(this);
     }
     public int useTime()
     {
@@ -24,26 +31,39 @@ public class MyTimer
     public void runTimer()
     {
         time = useTime();
-        //int breaks = f.printQuestion2();
-        //int timeBetween = time/breaks;
         Timer theTimer = new Timer();
-        System.out.println(time);
         remainingTime = time/PERIOD;
+        int timeBetween = remainingTime/2;
+
         theTimer.schedule(new TimerTask() {
             public void run() {
                 if (remainingTime > 0) {
-                    //if (remainingTime%timeBetween == 0)
-                    //{
-
-                    //}
-                    f.state++;
                     System.out.println("Time remaining: " + remainingTime);
                     f.repaint();
-                    remainingTime--;
+                    if (!pause) {
+                        remainingTime--;
+                    }
+                    else{
+                        playTime--;
+                        System.out.println(playTime);
+                    }
+                    if (remainingTime == timeBetween && !pause)
+                    {
+                        //start the game
+                        pause = true;
+                        playTime = 20;
+                        f.state = 3;
+                        game.startGame();
+                    }
+                    if(playTime == 0){ //stop game
+                        pause = false;
+                        f.state = 1;
+                    }
                 }
                 else
                 {
                      System.out.println("Your work period is done!");
+                     f.state = 2;
                      f.repaint();
                     theTimer.cancel();
                 }
@@ -54,16 +74,12 @@ public class MyTimer
         return remainingTime;
     }
 
-    public boolean checkReady()
+    public void checkReady()
     {
-        while (f.state == 0)
+        if (f.state == 1)
         {
-            if (f.state > 0)
-            {
-                return true;
-            }
+            runTimer();
         }
-        return false;
     }
 
     public void keyTyped(KeyEvent e) {
@@ -77,21 +93,21 @@ public class MyTimer
         switch(e.getKeyCode())
         {
             case KeyEvent.VK_ENTER:
-                f.state++;
-                return;
+                f.state = 1;
+                f.repaint();
+                checkReady();
         }
-        f.repaint();
     }
     public String getTime()
     {
         return Integer.toString(time);
     }
+
     public static void main(String[] args)
     {
         MyTimer t = new MyTimer();
-        if (t.checkReady()) {
-            t.runTimer();
-        }
+        t.f.state = 0;
+        t.f.repaint();
     }
 }
 

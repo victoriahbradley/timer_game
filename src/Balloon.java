@@ -46,8 +46,7 @@ public class Balloon {
         back.f.repaint();
     }
 
-    public boolean isPopped(){
+    public boolean isPopped() {
         return isPopped;
     }
-
 }

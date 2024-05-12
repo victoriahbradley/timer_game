@@ -17,19 +17,28 @@ public class MyTimer implements KeyListener
     private int playTime = 0;
 
     private Balloons game;
+
     public MyTimer()
     {
         game = new Balloons(this);
+
         f = new TimerViewer(this, game);
+
+        // Adding KeyListener to Front-End.
         f.addKeyListener(this);
     }
+
+    // Calling the printQuestion1(), and multiplying it by 60 seconds and 1000 milliseconds.
     public int useTime()
     {
         return f.printQuestion1() * 60 * 1000;
     }
 
+    // Base code for creating the timer found at :
+    // https://stackoverflow.com/questions/4044726/how-to-set-a-timer-in-java
     public void runTimer()
     {
+        // Finding how long the timer should run for.
         time = useTime();
         Timer theTimer = new Timer();
         remainingTime = time/PERIOD;
@@ -37,29 +46,39 @@ public class MyTimer implements KeyListener
 
         theTimer.schedule(new TimerTask() {
             public void run() {
+
+                // Printing out the time remaining.
                 if (remainingTime > 0) {
                     System.out.println("Time remaining: " + remainingTime);
                     f.repaint();
+
+                    // When the game is not being played, continue to subtract from remaining time.
                     if (!pause) {
                         remainingTime--;
                     }
+
+                    // Else, subtract from the playtime.
                     else{
                         playTime--;
                         System.out.println(playTime);
                     }
                     if (remainingTime == timeBetween && !pause)
                     {
-                        //start the game
+                        // Start the game.
                         pause = true;
                         playTime = 20;
                         f.state = 3;
                         game.startGame();
                     }
-                    if(playTime == 0){ //stop game
+
+                    // Stop game.
+                    if(playTime == 0){
                         pause = false;
                         f.state = 1;
                     }
                 }
+
+                // When the timer is done, print this statement.
                 else
                 {
                      System.out.println("Your work period is done!");
@@ -89,7 +108,7 @@ public class MyTimer implements KeyListener
     }
 
     public void keyPressed(KeyEvent e) {
-        // The keyCode lets you know which key was pressed
+        // When Enter is pressed, call the checkReady method to run timer.
         switch(e.getKeyCode())
         {
             case KeyEvent.VK_ENTER:
@@ -97,10 +116,6 @@ public class MyTimer implements KeyListener
                 f.repaint();
                 checkReady();
         }
-    }
-    public String getTime()
-    {
-        return Integer.toString(time);
     }
 
     public static void main(String[] args)

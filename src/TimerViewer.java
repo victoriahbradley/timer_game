@@ -103,30 +103,47 @@ public class TimerViewer extends JFrame implements MouseListener {
 
         int timeR;
 
+        // Display's the Welcome Screen.
         if (state == 0) {
             System.out.println("state0");
             g.drawImage(welcome_page, 0, 0, this);
             g.drawImage(welcome_page, 0, 0, this);
-        } else if (state == 1) {
+        }
+        // Display's the Timer Screen
+        else if (state == 1) {
             System.out.println("state1");
             g.drawImage(timer, 0, 0, this);
             timeR = back.getRemainingTime();
-            //calc min and seconds here
+            // Calculating the minutes and the seconds.
             int sec = back.getRemainingTime() % 60;
             int min = back.getRemainingTime() / 60;
+
+            // Displaying minutes
             g.drawString(String.valueOf(min), 200, 350);
+
+            // Displays 00 is the seconds are 0.
             if (sec == 0) {
                 g.drawString("00", 400, 350);
-            } else {
+            }
+
+            // Displays 0-number if the number
+            else if (sec/10 == 0)
+            {
+                g.drawString("0" + String.valueOf(sec), 400, 350);
+            }
+                else {
                 g.drawString(String.valueOf(sec), 400, 350);
             }
+        // Displays the end screen
         } else if (state == 2) {
             System.out.println("state2");
             g.drawImage(end_screen, 0, 0, this);
-        } else if (state == 3) {
+        }
+        // Displays the game screen
+        else if (state == 3) {
             System.out.println("state3");
             g.drawImage(popBalloons, 0, 0, this);
-            //draw balloons
+            // Draws each of the Balloons.
             for (Balloon bal : g1.balloons) {
                 if (!bal.isPopped())
                 {
@@ -136,10 +153,10 @@ public class TimerViewer extends JFrame implements MouseListener {
         }
     }
 
-        public void clear (Graphics g)
-        {
-            g.setColor(new Color(225, 225, 225));
-            g.fillRect(0, 0, 800, 600);
-        }
-
+    // This is a method clear the screen.
+    public void clear (Graphics g)
+    {
+        g.setColor(new Color(225, 225, 225));
+        g.fillRect(0, 0, 800, 600);
+    }
 }

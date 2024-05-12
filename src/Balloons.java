@@ -18,6 +18,8 @@ public class Balloons
         for (int i = 0; i < 40; i++)
         {
             Balloon b = new Balloon(back, this);
+
+            // Set the X and Y positions of each balloon to a random int.
             b.setBalloonX((int) (Math.random() * 800));
             b.setBalloonY((int)(Math.random() * 550));
             balloons.add(b);
